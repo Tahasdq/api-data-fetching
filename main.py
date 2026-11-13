@@ -1,5 +1,8 @@
 import requests
+API_URL = "https://api.dictionaryapi.dev/api/v2/entries/en/"
+
 print("***Hello welcome to the dictionary***")
+
 text=""
 
 while True:
@@ -10,7 +13,7 @@ while True:
     if not text:
         continue
     try:
-        response = requests.get(f"https://api.dictionaryapi.dev/api/v2/entries/en/{text}" , timeout=10)
+        response = requests.get(f"{API_URL}{text}" , timeout=10)
 
         if response.status_code !=200:
             print(f"Sorry, '{text}' was not found. Please check your spelling.")
