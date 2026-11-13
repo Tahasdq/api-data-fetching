@@ -30,11 +30,13 @@ while True:
             print(f"\nPart of speech: {item['partOfSpeech']}")
             for index,i in enumerate(item["definitions"]):
                 print(f"defination {index+1}:", i["definition"])
+                
+    except requests.exceptions.Timeout:
+        print("The request timed out. Please try again.")
+        
     except requests.exceptions.RequestException:
         print("Network error. Please check your internet connection.")
 
-    except requests.exceptions.Timeout:
-        print("The request timed out. Please try again.")
 
     except ValueError:
         print("The API returned an invalid response.")
