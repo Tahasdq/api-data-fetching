@@ -21,19 +21,46 @@ while True:
 
         for item in response.json():
             word= item["word"]
-            meanings  = item["meanings"]
+            meanings.extend(item.get("meanings", []))
 
         
         print(f"\nWord: {word}")
         print("Meanings:")
-        for item in meanings:
-            print(f"\nPart of speech: {item['partOfSpeech']}")
-            for index,i in enumerate(item["definitions"]):
-                print(f"defination {index+1}:", i["definition"])
-                
+
+          # Prepare the flashcard information
+        flashcard_text = f"\nWord: {word}\n"
+
+        for meaning in meanings:
+            part_of_speech = meaning.get("partOfSpeech", "Unknown")
+            print(f"\nPart of speech: {part_of_speech}")
+            flashcard_text += f"\nPart of speech: {part_of_speech}\n"
+
+            for index,definition in enumerate(meaning.get("definitions",[]) ,start=1):
+                meaning_text = definition.get("definition", "No definition available.")
+                example = definition.get(
+                        "example", "No example available."
+                )
+
+                print(f"\nDefinition {index}: {meaning_text}" )
+                print(f"Example: {example}")
+
+             
+                flashcard_text += f"Definition {index}: {meaning_text}\n"
+                flashcard_text += f"Example: {example}\n"
+
+        choice = input("\nDo you want to save this flashcard? (y/n): ")
+
+        if choice.strip().lower() in ("y" , "yes"):
+            with open("flashcard.txt" , "a" , encoding="utf-8") as file:
+                file.write(flashcard_text)
+                file.write("\n" + "-" * 40 + "\n")
+            print("Flashcard saved successfully!")
+        else:
+            print("Flashcard not saved.")
+
     except requests.exceptions.Timeout:
         print("The request timed out. Please try again.")
-        
+
     except requests.exceptions.RequestException:
         print("Network error. Please check your internet connection.")
 
